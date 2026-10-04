@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Sidebar } from "./components/layout/Sidebar";
+import { ThreatOverview } from "./features/dashboard/components/ThreatOverview";
+import { RuleTable } from "./features/security-rules/components/RuleTable";
+import { AuditLogTable } from "./features/audit-logs/components/AuditLogTable";
+import { useRules } from "./features/security-rules/hooks/useRules";
+import { useAuditLogs } from "./features/audit-logs/hooks/useAuditLogs";
 import { useUserProfile } from "./shared/hooks/useUserProfile";
 import { UserProfileModal } from "./components/layout/UserProfileModal";
 import { APP_ROUTES, AppTab } from "./constants/routes.constants";
@@ -27,10 +32,27 @@ export const App: React.FC = () => {
 
   const { profile, updateProfile, uploadCustomImage, removeAvatar } = useUserProfile();
 
+  const {
+    rules,
+    loading: rulesLoading,
+    addRule,
+    updateRule,
+    toggleRuleActive,
+    deleteRule,
+    seedDefaults,
+    refresh: refreshRules,
+  } = useRules();
+
+  const {
+    logs,
+    loading: logsLoading,
+    refresh: refreshLogs,
+  } = useAuditLogs();
+
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        await apiClient.get("/health");
+        await apiClient.get("/rules?limit=1");
         setBackendOnline(true);
       } catch (err) {
         setBackendOnline(false);
@@ -57,20 +79,41 @@ export const App: React.FC = () => {
           <div className="flex items-center gap-3">
             <span className="text-zinc-500 uppercase tracking-wider">SUBSYSTEM:</span>
             <span className="text-zinc-200 font-semibold tracking-wide">
-              BASE INICIAL DEL PROYECTO
+              {currentTab === APP_ROUTES.DASHBOARD && "PANEL DE CONTROL FORENSE"}
+              {currentTab === APP_ROUTES.SIMULATOR && "SANDBOX DE EVALUACIÓN HEURÍSTICA"}
+              {currentTab === APP_ROUTES.RULES && "MATRIZ DE REGLAS Y POLÍTICAS"}
+              {currentTab === APP_ROUTES.AUDIT && "REGISTRO DE AUDITORÍA Y TRAZABILIDAD"}
             </span>
           </div>
         </header>
 
-        <main className="flex-1 p-8 flex items-center justify-center">
-          <div className="max-w-md p-6 border border-zinc-800 bg-[#09090c] text-center font-mono">
-            <div className="w-3 h-3 bg-emerald-500 mx-auto mb-4 animate-ping"></div>
-            <h2 className="text-sm font-bold text-white mb-2">JOANVECTOR SOC - BASE LISTA</h2>
-            <p className="text-xs text-zinc-400 mb-4">
-              La estructura base del proyecto está inicializada. Los módulos de telemetría, reglas, sandbox y portal corporativo se integrarán progresivamente a través de las ramas de desarrollo por cada Historia de Usuario (Sprint 1 a Sprint 3).
-            </p>
-            <span className="text-[10px] text-zinc-500">Esperando despliegue de Sprint 1...</span>
-          </div>
+        <main className="flex-1 p-6">
+          {currentTab === APP_ROUTES.DASHBOARD && (
+            <ThreatOverview logs={logs} onRefresh={refreshLogs} />
+          )}
+
+          {currentTab === APP_ROUTES.RULES && (
+            <RuleTable
+              rules={rules}
+              loading={rulesLoading}
+              onAddRule={addRule}
+              onUpdateRule={updateRule}
+              onToggleActive={toggleRuleActive}
+              onDeleteRule={deleteRule}
+              onSeedDefaults={seedDefaults}
+              onRefresh={refreshRules}
+            />
+          )}
+
+          {currentTab === APP_ROUTES.AUDIT && (
+            <AuditLogTable logs={logs} loading={logsLoading} onRefresh={refreshLogs} />
+          )}
+
+          {currentTab === APP_ROUTES.SIMULATOR && (
+            <div className="p-8 border border-zinc-800 bg-[#09090c] text-center font-mono">
+              <span className="text-zinc-400 text-xs">Módulo Sandbox en integración (HU-06)</span>
+            </div>
+          )}
         </main>
       </div>
 
