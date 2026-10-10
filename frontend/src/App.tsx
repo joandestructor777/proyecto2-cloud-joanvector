@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Sidebar } from "./components/layout/Sidebar";
 import { ThreatOverview } from "./features/dashboard/components/ThreatOverview";
+import { WebsiteAssistantView } from "./features/assistant-simulator/components/WebsiteAssistantView";
 import { RuleTable } from "./features/security-rules/components/RuleTable";
 import { AuditLogTable } from "./features/audit-logs/components/AuditLogTable";
 import { useRules } from "./features/security-rules/hooks/useRules";
@@ -92,6 +93,10 @@ export const App: React.FC = () => {
             <ThreatOverview logs={logs} onRefresh={refreshLogs} />
           )}
 
+          {currentTab === APP_ROUTES.SIMULATOR && (
+            <WebsiteAssistantView onNavigateToRules={() => setCurrentTab(APP_ROUTES.RULES)} />
+          )}
+
           {currentTab === APP_ROUTES.RULES && (
             <RuleTable
               rules={rules}
@@ -107,12 +112,6 @@ export const App: React.FC = () => {
 
           {currentTab === APP_ROUTES.AUDIT && (
             <AuditLogTable logs={logs} loading={logsLoading} onRefresh={refreshLogs} />
-          )}
-
-          {currentTab === APP_ROUTES.SIMULATOR && (
-            <div className="p-8 border border-zinc-800 bg-[#09090c] text-center font-mono">
-              <span className="text-zinc-400 text-xs">Módulo Sandbox en integración (HU-06)</span>
-            </div>
           )}
         </main>
       </div>
