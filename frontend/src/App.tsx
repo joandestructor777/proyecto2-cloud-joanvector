@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Sidebar } from "./components/layout/Sidebar";
 import { ThreatOverview } from "./features/dashboard/components/ThreatOverview";
+import { WebsiteAssistantView } from "./features/assistant-simulator/components/WebsiteAssistantView";
+import { RuleTable } from "./features/security-rules/components/RuleTable";
 import { AuditLogTable } from "./features/audit-logs/components/AuditLogTable";
+import { useRules } from "./features/security-rules/hooks/useRules";
 import { useAuditLogs } from "./features/audit-logs/hooks/useAuditLogs";
 import { useUserProfile } from "./shared/hooks/useUserProfile";
 import { UserProfileModal } from "./components/layout/UserProfileModal";
@@ -29,6 +32,17 @@ export const App: React.FC = () => {
   }, [currentTab]);
 
   const { profile, updateProfile, uploadCustomImage, removeAvatar } = useUserProfile();
+
+  const {
+    rules,
+    loading: rulesLoading,
+    addRule,
+    updateRule,
+    toggleRuleActive,
+    deleteRule,
+    seedDefaults,
+    refresh: refreshRules,
+  } = useRules();
 
   const {
     logs,
@@ -79,14 +93,25 @@ export const App: React.FC = () => {
             <ThreatOverview logs={logs} onRefresh={refreshLogs} />
           )}
 
-          {currentTab === APP_ROUTES.AUDIT && (
-            <AuditLogTable logs={logs} loading={logsLoading} onRefresh={refreshLogs} />
+          {currentTab === APP_ROUTES.SIMULATOR && (
+            <WebsiteAssistantView onNavigateToRules={() => setCurrentTab(APP_ROUTES.RULES)} />
           )}
 
-          {currentTab !== APP_ROUTES.DASHBOARD && currentTab !== APP_ROUTES.AUDIT && (
-            <div className="p-8 border border-zinc-800 bg-[#09090c] text-center font-mono">
-              <span className="text-zinc-400 text-xs">Módulo en despliegue activo para Sprint 2</span>
-            </div>
+          {currentTab === APP_ROUTES.RULES && (
+            <RuleTable
+              rules={rules}
+              loading={rulesLoading}
+              onAddRule={addRule}
+              onUpdateRule={updateRule}
+              onToggleActive={toggleRuleActive}
+              onDeleteRule={deleteRule}
+              onSeedDefaults={seedDefaults}
+              onRefresh={refreshRules}
+            />
+          )}
+
+          {currentTab === APP_ROUTES.AUDIT && (
+            <AuditLogTable logs={logs} loading={logsLoading} onRefresh={refreshLogs} />
           )}
         </main>
       </div>
