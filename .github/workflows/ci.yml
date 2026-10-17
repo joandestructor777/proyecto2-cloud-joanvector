@@ -1,0 +1,62 @@
+name: Continuous Integration (CI)
+
+on:
+  push:
+    branches: [ main, production, development ]
+  pull_request:
+    branches: [ main, production, development ]
+
+jobs:
+  backend-ci:
+    name: Backend CI (FastAPI & Python 3.11)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install Backend Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Validate Backend Application Startup
+        env:
+          DATABASE_URL: sqlite:///./ci_test.db
+        run: |
+          cd backend
+          python -c "from app.main import app; print('✓ Backend loaded successfully. FastAPI instance initialized.')"
+
+  frontend-ci:
+    name: Frontend CI (React 19, TypeScript & Vite)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Typecheck TypeScript & Build Production Bundle
+        env:
+          VITE_API_URL: http://localhost:8000/api/v1
+        run: |
+          cd frontend
+          npm run build
