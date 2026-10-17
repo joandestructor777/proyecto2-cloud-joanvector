@@ -4,6 +4,7 @@ import { ThreatOverview } from "./features/dashboard/components/ThreatOverview";
 import { WebsiteAssistantView } from "./features/assistant-simulator/components/WebsiteAssistantView";
 import { RuleTable } from "./features/security-rules/components/RuleTable";
 import { AuditLogTable } from "./features/audit-logs/components/AuditLogTable";
+import { CompenHackPortal } from "./features/compenhack/components/CompenHackPortal";
 import { useRules } from "./features/security-rules/hooks/useRules";
 import { useAuditLogs } from "./features/audit-logs/hooks/useAuditLogs";
 import { useUserProfile } from "./shared/hooks/useUserProfile";
@@ -65,6 +66,14 @@ export const App: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  if (currentTab === APP_ROUTES.COMPENHACK) {
+    return (
+      <CompenHackPortal
+        onBackToSOC={() => setCurrentTab(APP_ROUTES.DASHBOARD)}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#050507] text-[#f4f4f5] flex font-sans selection:bg-white selection:text-black">
       <Sidebar
@@ -86,15 +95,30 @@ export const App: React.FC = () => {
               {currentTab === APP_ROUTES.AUDIT && "REGISTRO DE AUDITORÍA Y TRAZABILIDAD"}
             </span>
           </div>
+
+          <div className="flex items-center gap-4 text-zinc-500">
+            <div className="hidden sm:flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-none inline-block"></span>
+              <span className="text-[11px] text-zinc-400">DEFENSIVE GUARDRAIL</span>
+            </div>
+            <span className="text-zinc-700">|</span>
+            <span className="text-[11px] text-zinc-400">SOC ENGINE</span>
+          </div>
         </header>
 
-        <main className="flex-1 p-6">
+        <main className="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-8 py-8 min-w-0">
           {currentTab === APP_ROUTES.DASHBOARD && (
-            <ThreatOverview logs={logs} onRefresh={refreshLogs} />
+            <ThreatOverview
+              onNavigateToSimulator={() => setCurrentTab(APP_ROUTES.SIMULATOR)}
+              onNavigateToRules={() => setCurrentTab(APP_ROUTES.RULES)}
+            />
           )}
 
           {currentTab === APP_ROUTES.SIMULATOR && (
-            <WebsiteAssistantView onNavigateToRules={() => setCurrentTab(APP_ROUTES.RULES)} />
+            <WebsiteAssistantView
+              userProfile={profile}
+              onOpenProfileModal={() => setIsProfileModalOpen(true)}
+            />
           )}
 
           {currentTab === APP_ROUTES.RULES && (
@@ -111,19 +135,32 @@ export const App: React.FC = () => {
           )}
 
           {currentTab === APP_ROUTES.AUDIT && (
-            <AuditLogTable logs={logs} loading={logsLoading} onRefresh={refreshLogs} />
+            <AuditLogTable
+              logs={logs}
+              loading={logsLoading}
+              onRefresh={refreshLogs}
+            />
           )}
         </main>
+
+        <footer className="border-t border-zinc-900 bg-[#070709] py-4 px-6 text-center text-xs text-zinc-500 font-mono mt-auto">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span>JoanVector • Enterprise Cybersecurity Architecture</span>
+            <span className="text-[11px] text-zinc-600">FastAPI • SQLite / PostgreSQL • Vite</span>
+          </div>
+        </footer>
       </div>
 
       <UserProfileModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
         profile={profile}
-        onUpdateProfile={updateProfile}
-        onUploadCustomImage={uploadCustomImage}
+        onSaveProfile={updateProfile}
+        onUploadImage={uploadCustomImage}
         onRemoveAvatar={removeAvatar}
       />
     </div>
   );
 };
+
+export default App;
