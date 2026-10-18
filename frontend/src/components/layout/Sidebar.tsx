@@ -83,7 +83,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <div className="px-4 py-3 mx-4 my-4 bg-black/60 border border-zinc-800/90 font-mono text-[11px]">
           <div className="flex items-center justify-between text-zinc-400 mb-1.5">
-            <span className="text-[10px] uppercase text-zinc-500 tracking-wider">GATEWAY STATUS</span>
+            <span className="text-[10px] uppercase text-zinc-500 tracking-wider">GATEWAAY STATUS</span>
             <span
               className={`inline-flex items-center gap-1.5 text-[11px] font-semibold ${
                 backendOnline ? "text-emerald-400" : "text-rose-400"
