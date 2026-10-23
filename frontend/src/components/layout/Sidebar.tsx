@@ -190,7 +190,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         <div className="mt-3 flex items-center justify-between font-mono text-[10px] text-zinc-600 px-1">
-          <span>HOST: LOCALHOST</span>
+          <span>HOST: {typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1" ? "AZURE CLOUD" : "LOCALHOST"}</span>
           <span>SEC_LEVEL: MAX</span>
         </div>
       </div>
