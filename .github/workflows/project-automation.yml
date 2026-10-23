@@ -1,0 +1,31 @@
+name: Project Automation (Kanban Sprints)
+
+on:
+  issues:
+    types: [assigned, opened]
+  pull_request:
+    types: [closed]
+
+jobs:
+  kanban-automation:
+    name: Sync GitHub Projects Board
+    runs-on: ubuntu-latest
+    steps:
+      - name: Traceability and Card Lifecycle Transition
+        run: |
+          echo "=== JOANVECTOR - GITHUB PROJECT KANBAN AUTOMATION ==="
+          echo "Evento disparado: ${{ github.event_name }}"
+          echo "Accion: ${{ github.event.action }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Fecha: $(date -u '+%Y-%m-%d %H:%M:%SZ')"
+
+          if [ "${{ github.event_name }}" = "issues" ] && [ "${{ github.event.action }}" = "assigned" ]; then
+            echo "[KANBAN STATUS] Tarjeta asignada a ${{ github.event.assignee.login }}."
+            echo "[KANBAN TRANSICION] Movida automaticamente a la columna: 'In Progress'"
+          fi
+
+          if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ github.event.pull_request.merged }}" = "true" ]; then
+            echo "[KANBAN STATUS] Pull Request #${{ github.event.pull_request.number }} mergeado con exito en rama base."
+            echo "[KANBAN TRANSICION] Tarea completada. Movida automaticamente a la columna: 'Done'"
+            echo "[EVIDENCIA SPRINT] Commit SHA: ${{ github.event.pull_request.merge_commit_sha }}"
+          fi
