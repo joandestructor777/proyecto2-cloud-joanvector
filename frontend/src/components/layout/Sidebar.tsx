@@ -62,7 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-72 shrink-0 bg-[#070709] border-r border-zinc-800 flex flex-col justify-between min-h-screen select-none font-sans">
+    <aside className="w-full lg:w-68 xl:w-72 shrink-0 bg-[#070709] border-b lg:border-b-0 lg:border-r border-zinc-800 flex flex-col justify-between lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto select-none font-sans">
       <div>
         <div className="p-6 border-b border-zinc-800/80">
           <div className="flex items-center justify-between mb-3">

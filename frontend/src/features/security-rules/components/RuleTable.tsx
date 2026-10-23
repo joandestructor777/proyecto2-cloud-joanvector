@@ -154,23 +154,23 @@ export const RuleTable: React.FC<RuleTableProps> = ({
             No se encontraron políticas que coincidan con los filtros aplicados.
           </div>
         ) : (
-          <div className="overflow-x-auto w-full">
-            <table className="w-full text-left border-collapse text-xs min-w-[780px]">
-              <thead>
+          <div className="overflow-x-auto overflow-y-auto max-h-[68vh] w-full">
+            <table className="w-full text-left border-collapse text-xs min-w-[820px]">
+              <thead className="sticky top-0 z-10 bg-[#0c0c0e] shadow-[0_1px_0_0_#27272a]">
                 <tr className="border-b border-zinc-800 bg-[#0c0c0e] text-zinc-400 font-mono uppercase tracking-wider text-[11px]">
-                  <th className="py-3 px-5 w-28 font-semibold">Estado</th>
-                  <th className="py-3 px-5 font-semibold">Regla & Vector</th>
-                  <th className="py-3 px-5 font-semibold">Término / Patrón</th>
-                  <th className="py-3 px-5 font-semibold">Categoría</th>
-                  <th className="py-3 px-5 font-semibold">Severidad</th>
-                  <th className="py-3 px-5 font-semibold">Acción</th>
-                  <th className="py-3 px-5 text-right w-36 font-semibold">Operaciones</th>
+                  <th className="py-3.5 px-3.5 w-24 font-semibold whitespace-nowrap">Estado</th>
+                  <th className="py-3.5 px-3.5 min-w-[180px] font-semibold">Regla & Vector</th>
+                  <th className="py-3.5 px-3.5 min-w-[190px] font-semibold">Término / Patrón</th>
+                  <th className="py-3.5 px-3.5 font-semibold whitespace-nowrap">Categoría</th>
+                  <th className="py-3.5 px-3.5 font-semibold whitespace-nowrap">Severidad</th>
+                  <th className="py-3.5 px-3.5 font-semibold whitespace-nowrap">Acción</th>
+                  <th className="py-3.5 px-3.5 text-right w-32 font-semibold whitespace-nowrap">Operaciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/60 font-mono">
                 {filteredRules.map((rule) => (
                   <tr key={rule.id} className="hover:bg-zinc-900/40 transition-colors">
-                    <td className="py-3 px-5 whitespace-nowrap">
+                    <td className="py-3.5 px-3.5 whitespace-nowrap align-middle">
                       <button
                         onClick={() => onToggleActive(rule.id, rule.is_active)}
                         className="cursor-pointer text-[11px] font-bold"
@@ -184,8 +184,8 @@ export const RuleTable: React.FC<RuleTableProps> = ({
                       </button>
                     </td>
 
-                    <td className="py-3 px-5 max-w-[240px] min-w-[150px]">
-                      <div className="font-semibold text-white tracking-tight truncate">
+                    <td className="py-3.5 px-3.5 max-w-[230px] min-w-[170px] align-middle">
+                      <div className="font-semibold text-white tracking-tight truncate" title={rule.name}>
                         {rule.name}
                       </div>
                       {rule.description && (
@@ -198,24 +198,26 @@ export const RuleTable: React.FC<RuleTableProps> = ({
                       )}
                     </td>
 
-                    <td className="py-3 px-5 max-w-[240px]">
-                      <span className="px-2 py-0.5 bg-black border border-zinc-700 text-zinc-200 text-xs font-semibold break-all inline-block">
-                        {rule.keyword}
-                      </span>
-                      <span className="ml-2 text-[10px] text-zinc-500 uppercase shrink-0 inline-block">
-                        [{rule.pattern_type}]
-                      </span>
+                    <td className="py-3.5 px-3.5 min-w-[190px] max-w-[260px] align-middle">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="px-2 py-1 bg-black border border-zinc-700 text-zinc-200 text-xs font-semibold break-words leading-snug inline-block max-w-full">
+                          {rule.keyword}
+                        </span>
+                        <span className="text-[10px] text-zinc-500 uppercase shrink-0 inline-block">
+                          [{rule.pattern_type}]
+                        </span>
+                      </div>
                     </td>
 
-                    <td className="py-3 px-5 whitespace-nowrap">
-                      <span className="text-xs text-zinc-400 font-medium">
+                    <td className="py-3.5 px-3.5 whitespace-nowrap align-middle">
+                      <span className="text-[11px] text-zinc-300 font-medium px-2 py-0.5 bg-zinc-900/80 border border-zinc-800">
                         {rule.category}
                       </span>
                     </td>
 
-                    <td className="py-3 px-5 whitespace-nowrap">
+                    <td className="py-3.5 px-3.5 whitespace-nowrap align-middle">
                       <span
-                        className={`px-2 py-0.5 text-[11px] font-bold border ${getSeverityStyle(
+                        className={`px-2 py-0.5 text-[11px] font-bold border inline-block ${getSeverityStyle(
                           rule.severity
                         )}`}
                       >
@@ -223,31 +225,33 @@ export const RuleTable: React.FC<RuleTableProps> = ({
                       </span>
                     </td>
 
-                    <td className="py-3 px-5 whitespace-nowrap">
+                    <td className="py-3.5 px-3.5 whitespace-nowrap align-middle">
                       <Badge variant={rule.action === "BLOCK" ? "danger" : "warning"}>
                         {rule.action}
                       </Badge>
                     </td>
 
-                    <td className="py-3 px-5 whitespace-nowrap text-right space-x-2">
-                      <button
-                        onClick={() => handleOpenEdit(rule)}
-                        className="px-2 py-0.5 text-[11px] text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-600 bg-zinc-900 transition-colors"
-                        title="Modificar regla"
-                      >
-                        [EDIT]
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (confirm(`¿Eliminar la regla "${rule.name}" permanentemente?`)) {
-                            onDeleteRule(rule.id);
-                          }
-                        }}
-                        className="px-2 py-0.5 text-[11px] text-rose-400 hover:text-rose-200 border border-zinc-800 hover:border-rose-900 bg-rose-950/20 transition-colors"
-                        title="Eliminar regla"
-                      >
-                        [DEL]
-                      </button>
+                    <td className="py-3.5 px-3.5 whitespace-nowrap text-right align-middle">
+                      <div className="inline-flex items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => handleOpenEdit(rule)}
+                          className="px-2.5 py-1 text-[11px] text-zinc-300 hover:text-white border border-zinc-700 hover:border-zinc-500 bg-zinc-900 transition-colors cursor-pointer"
+                          title="Modificar regla"
+                        >
+                          [EDIT]
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (confirm(`¿Eliminar la regla "${rule.name}" permanentemente?`)) {
+                              onDeleteRule(rule.id);
+                            }
+                          }}
+                          className="px-2.5 py-1 text-[11px] text-rose-400 hover:text-rose-200 border border-rose-900/60 hover:border-rose-700 bg-rose-950/30 transition-colors cursor-pointer"
+                          title="Eliminar regla"
+                        >
+                          [DEL]
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -257,8 +261,8 @@ export const RuleTable: React.FC<RuleTableProps> = ({
         )}
 
         <div className="px-5 py-3 bg-[#0c0c0e] border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500 font-mono flex-wrap gap-2">
-          <span>Total de políticas registradas: {rules.length} (Filtradas: {filteredRules.length})</span>
-          <span className="text-[11px]">INTERCEPTOR PERIMETRAL - ON</span>
+          <span>Total de políticas registradas: {rules.length} (Mostrando: {filteredRules.length})</span>
+          <span className="text-[11px] text-emerald-400/90">● INTERCEPTOR PERIMETRAL - ON</span>
         </div>
       </div>
 

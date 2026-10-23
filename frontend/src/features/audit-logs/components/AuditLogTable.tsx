@@ -94,17 +94,17 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
             No se registran eventos con los criterios seleccionados. Envía una consulta desde el sandbox para generar tráfico.
           </div>
         ) : (
-          <div className="overflow-x-auto w-full">
-            <table className="w-full text-left border-collapse text-xs min-w-[760px]">
-              <thead>
+          <div className="overflow-x-auto overflow-y-auto max-h-[68vh] w-full">
+            <table className="w-full text-left border-collapse text-xs min-w-[780px]">
+              <thead className="sticky top-0 z-10 bg-[#0c0c0e] shadow-[0_1px_0_0_#27272a]">
                 <tr className="border-b border-zinc-800 bg-[#0c0c0e] text-zinc-400 font-mono uppercase tracking-wider text-[11px]">
-                  <th className="py-3 px-5 w-36 font-semibold">Timestamp</th>
-                  <th className="py-3 px-5 w-28 font-semibold">Estado</th>
-                  <th className="py-3 px-5 w-28 font-semibold">IP Origen</th>
-                  <th className="py-3 px-5 font-semibold">Prompt Inspeccionado</th>
-                  <th className="py-3 px-5 font-semibold">Términos Detectados</th>
-                  <th className="py-3 px-5 w-36 font-semibold">Severidad / Riesgo</th>
-                  <th className="py-3 px-5 text-right w-28 font-semibold">Análisis</th>
+                  <th className="py-3.5 px-3.5 w-36 font-semibold whitespace-nowrap">Timestamp</th>
+                  <th className="py-3.5 px-3.5 w-28 font-semibold whitespace-nowrap">Estado</th>
+                  <th className="py-3.5 px-3.5 w-28 font-semibold whitespace-nowrap">IP Origen</th>
+                  <th className="py-3.5 px-3.5 min-w-[180px] font-semibold">Prompt Inspeccionado</th>
+                  <th className="py-3.5 px-3.5 min-w-[160px] font-semibold">Términos Detectados</th>
+                  <th className="py-3.5 px-3.5 w-36 font-semibold whitespace-nowrap">Severidad / Riesgo</th>
+                  <th className="py-3.5 px-3.5 text-right w-28 font-semibold whitespace-nowrap">Análisis</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/60 font-mono">
